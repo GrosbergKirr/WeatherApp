@@ -1,0 +1,202 @@
+definitions:
+  models.CitiesListResponse:
+    properties:
+      cities:
+        items:
+          type: string
+        type: array
+    type: object
+  models.Clouds:
+    properties:
+      all:
+        type: integer
+    type: object
+  models.FullForecastRequest:
+    properties:
+      city:
+        type: string
+      date:
+        type: string
+    type: object
+  models.MainInfo:
+    properties:
+      feels_like:
+        type: number
+      grnd_level:
+        type: integer
+      humidity:
+        type: integer
+      pressure:
+        type: integer
+      sea_level:
+        type: integer
+      temp:
+        type: number
+      temp_kf:
+        type: number
+      temp_max:
+        type: number
+      temp_min:
+        type: number
+    type: object
+  models.Rain:
+    properties:
+      3h:
+        type: number
+    type: object
+  models.Record:
+    properties:
+      clouds:
+        $ref: '#/definitions/models.Clouds'
+      dt:
+        type: integer
+      dt_txt:
+        type: string
+      main:
+        $ref: '#/definitions/models.MainInfo'
+      pop:
+        type: number
+      rain:
+        $ref: '#/definitions/models.Rain'
+      sys:
+        $ref: '#/definitions/models.Sys'
+      visibility:
+        type: integer
+      weather:
+        items:
+          $ref: '#/definitions/models.WeatherGet'
+        type: array
+      wind:
+        $ref: '#/definitions/models.Wind'
+    type: object
+  models.ShortForecastResponse:
+    properties:
+      city:
+        type: string
+      country:
+        type: string
+      dates:
+        items:
+          type: string
+        type: array
+      meanTemp:
+        type: number
+    type: object
+  models.Sys:
+    properties:
+      pod:
+        type: string
+    type: object
+  models.WeatherGet:
+    properties:
+      description:
+        type: string
+      icon:
+        type: string
+      id:
+        type: integer
+      main:
+        type: string
+    type: object
+  models.Wind:
+    properties:
+      deg:
+        type: integer
+      gust:
+        type: number
+      speed:
+        type: number
+    type: object
+host: localhost:9090
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Weather app swagger
+  version: "1.0"
+paths:
+  /get_cities:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        required: true
+        type: string
+      - description: Number of items per page
+        in: query
+        name: per_page
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of cities
+          schema:
+            $ref: '#/definitions/models.CitiesListResponse'
+        "400":
+          description: Invalid input
+        "500":
+          description: Internal server error
+      summary: Get list of available cities
+      tags:
+      - WeatherAPI
+  /get_full_forecast:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Name of city and date of full forecast
+        example: '{"city": "Minsk", "date": "2024-07-12 12:00:00"}'
+        in: body
+        name: City&Date
+        required: true
+        schema:
+          $ref: '#/definitions/models.FullForecastRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Full forecast
+          schema:
+            $ref: '#/definitions/models.Record'
+        "400":
+          description: Invalid input
+        "500":
+          description: Internal server error
+      summary: Get list of available cities
+      tags:
+      - tasks
+  /get_short_forecast:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Name of city
+        in: query
+        name: city
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Short forecast
+          schema:
+            $ref: '#/definitions/models.ShortForecastResponse'
+        "400":
+          description: Invalid input
+        "500":
+          description: Internal server error
+      summary: Get list of available cities
+      tags:
+      - tasks
+swagger: "2.0"

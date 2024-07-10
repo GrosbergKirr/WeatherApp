@@ -1,0 +1,17 @@
+# IDE
+.idea
+.vscode
+
+# temporary files
+temp
+tmp
+
+# binary
+bin/
+
+# env file
+.env
+
+# config file
+config/config.yaml
+config/config_docker.yaml

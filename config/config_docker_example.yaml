@@ -1,0 +1,14 @@
+storage:
+  db_user: "username"
+  db_password: "password"
+  db_address: "container_db_name:5432"
+  db_name: "db_name"
+  db_ssl_mode: "disable"
+http_server:
+  server_address: "localhost:9090"
+  server_timeout: 4s
+  server_idle_timeout: 60s
+side_api_url:
+  get_cities_url: "cities_url"
+  get_weather_url: "weather_url"
+  api_key: "your_Key"
