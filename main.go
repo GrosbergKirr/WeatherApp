@@ -20,6 +20,7 @@ import (
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 // @host localhost:9090
 
+var configPath string
 var cityList = []string{
 	"Moscow", "Paris", "Berlin", "London",
 	"Madrid", "Rome", "Washington", "Ottawa",
@@ -28,11 +29,13 @@ var cityList = []string{
 	"Lisbon", "Beijing", "Ankara", "Seoul",
 }
 
+func init() {
+	flag.StringVar(&configPath, "c", "./config/config.yaml", "Path to config file")
+}
 func main() {
-	configPath := flag.String("config", "", "path to config file")
 	flag.Parse()
 	log := internal.SetupLogger()
-	cfg := internal.SetupConfig(log, *configPath)
+	cfg := internal.SetupConfig(log, configPath)
 	db := storage.InitStorage(log, cfg.DBUsername, cfg.DBPassword, cfg.DBAddress, cfg.DBName, cfg.DBMode)
 	cli := http.Client{}
 	//ctx := context.Background()
