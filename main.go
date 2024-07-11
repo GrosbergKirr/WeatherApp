@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"net/http"
 
@@ -38,9 +39,9 @@ func main() {
 	cfg := internal.SetupConfig(log, configPath)
 	db := storage.InitStorage(log, cfg.DBUsername, cfg.DBPassword, cfg.DBAddress, cfg.DBName, cfg.DBMode)
 	cli := http.Client{}
-	//ctx := context.Background()
+	ctx := context.Background()
 
 	cmd.RanWeatherClientApp(log, cfg, cli, db, cityList)
-	//cmd.WeatherServiceApp(ctx, log, cfg, db)
+	cmd.WeatherServiceApp(ctx, log, cfg, db)
 
 }

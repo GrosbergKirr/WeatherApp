@@ -15,11 +15,12 @@ func RanWeatherClientApp(log *slog.Logger,
 	cli http.Client,
 	db *storage.Storage,
 	cityList []string) {
-
 	citiesCoordinates := app_client.GetLocationApp(log, cfg, cli, cityList)
 	weatherList := app_client.GetWeatherApp(log, cfg, cli, citiesCoordinates)
 	db.SaveCitiesToDB(log, citiesCoordinates, weatherList)
 	db.SaveWeatherToDB(log, weatherList)
+
+	// Асинхронное обновление погоды
 	go func() {
 		time.Sleep(time.Minute)
 		for {
