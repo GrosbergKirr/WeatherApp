@@ -1,7 +1,6 @@
 package server
 
 import (
-	"context"
 	"log/slog"
 
 	"github.com/GrosbergKirr/WeatherApp/internal/app_api"
@@ -10,9 +9,9 @@ import (
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
-func SetRouters(ctx context.Context, log *slog.Logger, db *storage.Storage) chi.Router {
+func SetRouters(log *slog.Logger, db *storage.Storage) chi.Router {
 	router := chi.NewRouter()
-	router.Get("/get_cities", app_api.CitiesGetter(ctx, log, db))
+	router.Get("/get_cities", app_api.CitiesGetter(log, db))
 	router.Get("/get_short_forecast", app_api.ShortPredGetter(log, db))
 	router.Post("/get_full_forecast", app_api.FullPredGetter(log, db))
 

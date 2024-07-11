@@ -12,18 +12,18 @@ import (
 func GetWeatherApp(log *slog.Logger,
 	cfg *internal.Config,
 	cli http.Client,
-	cities []models.City) []models.Weather {
-	var respStruct models.WeatherResponse
-	var weatherList []models.Weather
+	cities []models.City) []models.Forecast {
+	var weatherList []models.Forecast
 	wg := new(sync.WaitGroup)
+	mu := new(sync.Mutex)
 	log.Info("Start parsing cities weather")
-	for cityIndex := range cities {
+	for _, cityIndex := range cities {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			err, statCode := GetWeather(log, cli, respStruct, cities[cityIndex], &weatherList, cfg.WeatherUrl, cfg.ApiKey)
+			statCode, err := GetWeather(log, cli, mu, cityIndex, &weatherList, cfg.WeatherUrl, cfg.ApiKey)
 			if err != nil {
-				log.Error("Get Weather fo each city error", slog.String("error", err.Error()),
+				log.Error("Get Forecast fo each city error", slog.String("error", err.Error()),
 					slog.Int("error", statCode))
 				return
 			}

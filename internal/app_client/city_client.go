@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"net/url"
 
 	"github.com/GrosbergKirr/WeatherApp/internal/models"
 
@@ -11,12 +12,22 @@ import (
 )
 
 func GetCitiesLocation(log *slog.Logger, client http.Client, sideApiUrl string, cityName string, apiKey string) (models.City, error, int) {
-	urlBody := sideApiUrl + fmt.Sprintf("q=%s&limit=5&appid=", cityName) + apiKey
+	u, err := url.Parse(sideApiUrl)
+	if err != nil {
+		fmt.Println("Error parsing URL:", err)
+		return models.City{}, err, http.StatusInternalServerError
+	}
+	q := u.Query()
+	q.Set("q", cityName)
+	q.Set("limit", "5")
+	q.Set("appid", apiKey)
+	u.RawQuery = q.Encode()
+	urlBody := u.String()
 
 	resp, err := client.Get(urlBody)
 	if err != nil {
 		log.Error("failed to get response")
-		return models.City{}, err, http.StatusInternalServerError
+		return models.City{}, err, resp.StatusCode
 
 	}
 	defer resp.Body.Close()

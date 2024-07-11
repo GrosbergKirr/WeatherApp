@@ -6,7 +6,9 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
+	"net/url"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/GrosbergKirr/WeatherApp/internal/models"
@@ -14,43 +16,54 @@ import (
 
 func GetWeather(log *slog.Logger,
 	client http.Client,
-	respStruct models.WeatherResponse,
+	mu *sync.Mutex,
 	city models.City,
-	weatherList *[]models.Weather,
+	weatherList *[]models.Forecast,
 	sideApiUrl string,
-	apiKey string) (error, int) {
-	urlBody := sideApiUrl + fmt.Sprintf("lat=%f&lon=%f&units=metric&appid=", city.Lat, city.Lon) + apiKey
+	apiKey string) (int, error) {
+	u, err := url.Parse(sideApiUrl)
+	if err != nil {
+		fmt.Println("Error parsing URL:", err)
+		return http.StatusInternalServerError, err
+	}
+	q := u.Query()
+	q.Set("lat", fmt.Sprintf("%f", city.Lat))
+	q.Set("lon", fmt.Sprintf("%f", city.Lat))
+	q.Set("units", "metric")
+	q.Set("appid", apiKey)
+	u.RawQuery = q.Encode()
+	urlBody := u.String()
+
 	resp, err := client.Get(urlBody)
 	if err != nil {
 		log.Error("failed to get response", slog.String("error", err.Error()))
-		return err, resp.StatusCode
+		return resp.StatusCode, err
 	}
-
 	respBody, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Error("Read request body error")
-		return err, resp.StatusCode
+		return resp.StatusCode, err
 	}
+	var respStruct models.WeatherResponse
 	err = json.Unmarshal(respBody, &respStruct)
 	if err != nil {
 		log.Error("failed to decode json")
-		return err, resp.StatusCode
+		return resp.StatusCode, err
 	}
 	defer resp.Body.Close()
-
-	var weather models.Weather
+	var weather models.Forecast
 	weather.FullForecast = respBody
-	for prediction := range respStruct.List {
-		dayTime := strings.Split(respStruct.List[prediction].DtTxt, " ")[1]
+	for _, prediction := range respStruct.List {
+		dayTime := strings.Split(prediction.DtTxt, " ")[1]
 		if dayTime == "12:00:00" {
 			weather.CityName = city.Name
-			weather.Temp = respStruct.List[prediction].Main.Temp
-			weather.Date = time.Unix(respStruct.List[prediction].Dt, 0)
+			weather.Temp = prediction.Main.Temp
+			weather.Date = time.Unix(prediction.Dt, 0)
+			mu.Lock()
 			*weatherList = append(*weatherList, weather)
+			mu.Unlock()
 		}
 
 	}
-
-	return nil, resp.StatusCode
-
+	return resp.StatusCode, err
 }

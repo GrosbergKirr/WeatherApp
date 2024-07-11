@@ -11,7 +11,7 @@ import (
 	"github.com/GrosbergKirr/WeatherApp/internal/models"
 )
 
-func (s *Storage) GetFullPred(log *slog.Logger, param models.Weather) (models.Record, error, int) {
+func (s *Storage) GetFullPred(log *slog.Logger, param models.Forecast) (models.Record, error, int) {
 	const path = "/storage/get_full_forecast"
 	var fullPredJson []byte
 	queryCity := "SELECT full_forecast FROM weather where city_name = $1 and date = $2"

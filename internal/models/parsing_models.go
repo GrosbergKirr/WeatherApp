@@ -8,16 +8,16 @@ type WeatherResponse struct {
 }
 
 type Record struct {
-	Dt         int64        `json:"dt"`
-	Main       MainInfo     `json:"bin"`
-	Weather    []WeatherGet `json:"weather"`
-	Clouds     Clouds       `json:"clouds"`
-	Wind       Wind         `json:"wind"`
-	Visibility int          `json:"visibility"`
-	Pop        float64      `json:"pop"`
-	Rain       Rain         `json:"rain"`
-	Sys        Sys          `json:"sys"`
-	DtTxt      string       `json:"dt_txt"`
+	Dt         int64     `json:"dt"`
+	Main       MainInfo  `json:"main"`
+	Weather    []Weather `json:"weather"`
+	Clouds     Clouds    `json:"clouds"`
+	Wind       Wind      `json:"wind"`
+	Visibility int       `json:"visibility"`
+	Pop        float64   `json:"pop"`
+	Rain       Rain      `json:"rain"`
+	Sys        Sys       `json:"sys"`
+	DtTxt      string    `json:"dt_txt"`
 }
 
 type MainInfo struct {
@@ -32,9 +32,9 @@ type MainInfo struct {
 	TempKf    float64 `json:"temp_kf"`
 }
 
-type WeatherGet struct {
+type Weather struct {
 	ID          int    `json:"id"`
-	Main        string `json:"bin"`
+	Main        string `json:"main"`
 	Description string `json:"description"`
 	Icon        string `json:"icon"`
 }

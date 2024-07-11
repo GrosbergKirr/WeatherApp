@@ -30,7 +30,7 @@ func (s *Storage) GetShortPred(log *slog.Logger, city string) (models.ShortForec
 	}
 	log.Debug("Get city, country from db success")
 
-	var weatherList []models.Weather
+	var weatherList []models.Forecast
 	queryWeather := "SELECT temperature, date FROM weather where city_name = $1"
 	if err := s.Db.Select(&weatherList, queryWeather, city); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {

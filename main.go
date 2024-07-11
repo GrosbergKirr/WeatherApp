@@ -1,18 +1,12 @@
 package main
 
 import (
-	"context"
-	"fmt"
-	"log/slog"
+	"flag"
 	"net/http"
-	"os"
-	"os/signal"
-	"syscall"
 
+	"github.com/GrosbergKirr/WeatherApp/cmd"
 	_ "github.com/GrosbergKirr/WeatherApp/docs"
 	"github.com/GrosbergKirr/WeatherApp/internal"
-	"github.com/GrosbergKirr/WeatherApp/internal/app_client"
-	"github.com/GrosbergKirr/WeatherApp/internal/server"
 	"github.com/GrosbergKirr/WeatherApp/internal/storage"
 )
 
@@ -26,53 +20,24 @@ import (
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 // @host localhost:9090
 
+var cityList = []string{
+	"Moscow", "Paris", "Berlin", "London",
+	"Madrid", "Rome", "Washington", "Ottawa",
+	"Minsk", "Tokyo", "Canberra", "Tallinn",
+	"Warsaw", "Budapest", "Jakarta", "Prague",
+	"Lisbon", "Beijing", "Ankara", "Seoul",
+}
+
 func main() {
+	configPath := flag.String("config", "", "path to config file")
+	flag.Parse()
 	log := internal.SetupLogger()
-	cfg := internal.SetupConfig(log)
+	cfg := internal.SetupConfig(log, *configPath)
 	db := storage.InitStorage(log, cfg.DBUsername, cfg.DBPassword, cfg.DBAddress, cfg.DBName, cfg.DBMode)
-	fmt.Println(cfg.DBAddress)
 	cli := http.Client{}
-	cityList := []string{
-		"Moscow",
-		"Paris",
-		"Berlin",
-		"London",
-		"Madrid",
-		"Rome",
-		"Washington",
-		"Ottawa",
-		"Minsk",
-		"Tokyo",
-		"Canberra",
-		"Tallinn",
-		"Warsaw",
-		"Budapest",
-		"Jakarta",
-		"Prague",
-		"Lisbon",
-		"Beijing",
-		"Ankara",
-		"Seoul",
-	}
+	//ctx := context.Background()
 
-	citiesCoordinates := app_client.GetLocationApp(log, cfg, cli, cityList)
-	_ = citiesCoordinates
-
-	weatherList := app_client.GetWeatherApp(log, cfg, cli, citiesCoordinates)
-
-	_ = weatherList
-	err := db.SaveToDB(log, citiesCoordinates, weatherList)
-	if err != nil {
-		log.Error("Error saving cities to database", slog.Any("err", err))
-	}
-	ctx := context.Background()
-	router := server.SetRouters(ctx, log, db)
-	newServer := server.NewServer(cfg, router)
-
-	serverStopSig := make(chan os.Signal)
-	signal.Notify(serverStopSig, syscall.SIGTERM, syscall.SIGINT, syscall.SIGKILL)
-	go newServer.ServerRun(log, cfg)
-	<-serverStopSig
-	newServer.ServerStop(ctx, log)
+	cmd.RanWeatherClientApp(log, cfg, cli, db, cityList)
+	//cmd.WeatherServiceApp(ctx, log, cfg, db)
 
 }

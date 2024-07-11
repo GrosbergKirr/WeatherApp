@@ -9,7 +9,7 @@ import (
 
 type Config struct {
 	DatabaseConfig `yaml:"storage"`
-	HttpConfig     `yaml:"http_server"`
+	HttpConfig     `yaml:"http_server_weather"`
 	SideApiUrl     `yaml:"side_api_url"`
 }
 type DatabaseConfig struct {
@@ -32,9 +32,9 @@ type SideApiUrl struct {
 	ApiKey     string `yaml:"api_key" env:"API_KEY"`
 }
 
-func SetupConfig(log *slog.Logger) *Config {
+func SetupConfig(log *slog.Logger, configPath string) *Config {
 	var cfg Config
-	err := cleanenv.ReadConfig("./config/config.yaml", &cfg)
+	err := cleanenv.ReadConfig(configPath, &cfg)
 	if err != nil {
 		log.Error("Failed to setup config", slog.Any("err", err))
 		panic(err)

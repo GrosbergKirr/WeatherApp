@@ -9,5 +9,5 @@ import (
 type WeatherInterface interface {
 	GetCities(log *slog.Logger, page, perPage string) (models.CitiesListResponse, error, int)
 	GetShortPred(log *slog.Logger, city string) (models.ShortForecastResponse, error, int)
-	GetFullPred(log *slog.Logger, param models.Weather) (models.Record, error, int)
+	GetFullPred(log *slog.Logger, param models.Forecast) (models.Record, error, int)
 }

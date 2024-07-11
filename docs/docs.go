@@ -33,7 +33,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "tasks"
+                    "WeatherAPI"
                 ],
                 "summary": "Get list of available cities",
                 "parameters": [
@@ -77,7 +77,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "tasks"
+                    "WeatherAPI"
                 ],
                 "summary": "Get list of available cities",
                 "parameters": [
@@ -117,7 +117,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "tasks"
+                    "WeatherAPI"
                 ],
                 "summary": "Get list of available cities",
                 "parameters": [

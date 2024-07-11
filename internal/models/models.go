@@ -12,7 +12,7 @@ type City struct {
 	Lon     float64 `json:"lon" db:"longitude"`
 }
 
-type Weather struct {
+type Forecast struct {
 	Id           int       `json:"id" db:"id,omitempty"`
 	CityName     string    `json:"city_name" db:"city_name"`
 	Temp         float64   `json:"temp" db:"temperature"`

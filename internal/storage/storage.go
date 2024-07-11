@@ -1,12 +1,9 @@
 package storage
 
 import (
-	//"database/sql"
-	//"database/sql"
 	"fmt"
 	"log/slog"
 
-	//_ "github.com/jackc/pgx/stdlib"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"github.com/pressly/goose"

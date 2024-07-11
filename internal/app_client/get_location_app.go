@@ -14,8 +14,8 @@ func GetLocationApp(log *slog.Logger,
 	cityList []string) []models.City {
 	log.Info("Start parsing cities info")
 	var cities []models.City
-	for city := range cityList {
-		cityResponse, err, code := GetCitiesLocation(log, cli, cfg.CitiesUrl, cityList[city], cfg.ApiKey)
+	for _, city := range cityList {
+		cityResponse, err, code := GetCitiesLocation(log, cli, cfg.CitiesUrl, city, cfg.ApiKey)
 		if err != nil {
 			log.Error("get location error", slog.Int("Status Code", code), slog.String("error", err.Error()))
 			return nil

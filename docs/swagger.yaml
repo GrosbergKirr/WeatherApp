@@ -174,7 +174,7 @@ paths:
           description: Internal server error
       summary: Get list of available cities
       tags:
-      - tasks
+      - WeatherAPI
   /get_short_forecast:
     get:
       consumes:
@@ -198,5 +198,5 @@ paths:
           description: Internal server error
       summary: Get list of available cities
       tags:
-      - tasks
+      - WeatherAPI
 swagger: "2.0"

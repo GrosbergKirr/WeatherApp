@@ -5,7 +5,7 @@ storage:
   db_name: "db_name"
   db_ssl_mode: "disable"
 http_server:
-  server_address: "localhost:9090"
+  server_address: "container_app_name:9090"
   server_timeout: 4s
   server_idle_timeout: 60s
 side_api_url:

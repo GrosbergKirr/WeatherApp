@@ -33,7 +33,7 @@ func FullPredGetter(log *slog.Logger, record WeatherInterface) http.HandlerFunc 
 		fmt.Println(req.Date)
 		log.Info("Get and decode json success")
 
-		var forecast models.Weather
+		var forecast models.Forecast
 		forecast.CityName = req.City
 		layout := "2006-01-02 15:04:05"
 		date, _ := time.Parse(layout, req.Date)

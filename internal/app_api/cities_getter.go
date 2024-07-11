@@ -1,7 +1,6 @@
 package app_api
 
 import (
-	"context"
 	"log/slog"
 	"net/http"
 
@@ -19,7 +18,7 @@ import (
 // @Failure 400 "Invalid input"
 // @Failure 500 "Internal server error"
 // @Router /get_cities [get]
-func CitiesGetter(ctx context.Context, log *slog.Logger, cities WeatherInterface) http.HandlerFunc {
+func CitiesGetter(log *slog.Logger, cities WeatherInterface) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const path = "/app_api/cities_getter"
 		page := r.URL.Query().Get("page")
