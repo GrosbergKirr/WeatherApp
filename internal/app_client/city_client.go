@@ -28,7 +28,6 @@ func GetCitiesLocation(log *slog.Logger, client http.Client, sideApiUrl string, 
 	if err != nil {
 		log.Error("failed to get response")
 		return models.City{}, err, resp.StatusCode
-
 	}
 	defer resp.Body.Close()
 
@@ -38,6 +37,5 @@ func GetCitiesLocation(log *slog.Logger, client http.Client, sideApiUrl string, 
 		log.Error("fail to decode json")
 		return models.City{}, err, resp.StatusCode
 	}
-
 	return city[0], nil, resp.StatusCode
 }

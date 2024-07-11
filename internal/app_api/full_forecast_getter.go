@@ -20,7 +20,7 @@ import (
 // @Failure 400 "Invalid input"
 // @Failure 500 "Internal server error"
 // @Router /get_full_forecast [post]
-func FullPredGetter(log *slog.Logger, record WeatherInterface) http.HandlerFunc {
+func FullPredGetter(log *slog.Logger, record DatabaseInterface) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const path string = "app_api/full_forecast_getter"
 		var req models.FullForecastRequest
@@ -39,12 +39,12 @@ func FullPredGetter(log *slog.Logger, record WeatherInterface) http.HandlerFunc 
 		date, _ := time.Parse(layout, req.Date)
 		fmt.Println(date)
 		forecast.Date = date
-		record, err, stat := record.GetFullPred(log, forecast)
+		weather, err, stat := record.GetFullPred(log, forecast)
 		if err != nil {
 			log.Error("Failed to get full prediction", slog.Any("err", err), slog.String("path", path))
 			w.WriteHeader(stat)
 			return
 		}
-		render.JSON(w, r, record)
+		render.JSON(w, r, weather)
 	}
 }

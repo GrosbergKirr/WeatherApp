@@ -36,5 +36,4 @@ func (s *Server) ServerStop(ctx context.Context, log *slog.Logger) {
 		log.Error("Server stop error", slog.Any("err", err))
 	}
 	log.Info("Server successfully stopped")
-
 }

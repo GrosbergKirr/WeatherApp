@@ -24,5 +24,4 @@ func GetLocationApp(log *slog.Logger,
 	}
 	log.Info("Parse cities info success")
 	return cities
-
 }

@@ -3,6 +3,7 @@ package app_api
 import (
 	"log/slog"
 	"net/http"
+	"strconv"
 
 	"github.com/go-chi/render"
 )
@@ -18,19 +19,31 @@ import (
 // @Failure 400 "Invalid input"
 // @Failure 500 "Internal server error"
 // @Router /get_cities [get]
-func CitiesGetter(log *slog.Logger, cities WeatherInterface) http.HandlerFunc {
+func CitiesGetter(log *slog.Logger, cities DatabaseInterface) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const path = "/app_api/cities_getter"
 		page := r.URL.Query().Get("page")
 		perPage := r.URL.Query().Get("per_page")
-		cities, err, stat := cities.GetCities(log, page, perPage)
+		pageInt, err := strconv.Atoi(page)
+		if err != nil {
+			log.Error("Pagination error. Page should be integer", slog.String("path", path))
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		perPageInt, err := strconv.Atoi(perPage)
+		if err != nil {
+			log.Error("Pagination error. perPage should be integer", slog.String("path", path))
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		offset := (pageInt - 1) * perPageInt
+		citiesList, err, stat := cities.GetCities(log, perPageInt, offset)
 		if err != nil {
 			log.Error("Failed to get cities", slog.Any("err", err), slog.String("path", path))
 			w.WriteHeader(stat)
 			return
 		}
 		log.Info("Get cities success")
-		render.JSON(w, r, cities)
-
+		render.JSON(w, r, citiesList)
 	}
 }
