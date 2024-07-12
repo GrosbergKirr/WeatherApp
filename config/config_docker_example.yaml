@@ -1,3 +1,4 @@
+log_level: "Debug" #Info/Warn/Error
 storage:
   db_user: "username"
   db_password: "password"

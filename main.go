@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"net/http"
+	"sync"
 
 	"github.com/GrosbergKirr/WeatherApp/cmd"
 	_ "github.com/GrosbergKirr/WeatherApp/docs"
@@ -35,13 +36,17 @@ func init() {
 }
 func main() {
 	flag.Parse()
-	log := internal.SetupLogger()
-	cfg := internal.SetupConfig(log, configPath)
+	cfg := internal.SetupConfig(configPath)
+	log, err := internal.SetupLogger(cfg)
+	if err != nil {
+		panic(err)
+	}
 	db := storage.InitStorage(log, cfg.DBUsername, cfg.DBPassword, cfg.DBAddress, cfg.DBName, cfg.DBMode)
 	cli := http.Client{}
 	ctx := context.Background()
-
-	cmd.RanWeatherClientApp(log, cfg, cli, db, cityList)
+	wg := &sync.WaitGroup{}
+	cmd.RanWeatherClientApp(ctx, wg, log, cfg, cli, db, cityList)
 	cmd.WeatherServiceApp(ctx, log, cfg, db)
+	wg.Wait()
 
 }

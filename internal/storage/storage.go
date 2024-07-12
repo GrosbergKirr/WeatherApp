@@ -18,7 +18,7 @@ func InitStorage(log *slog.Logger, user, pass, addr, name, mode string) *Storage
 	db, err := sqlx.Connect("postgres", dbPath)
 	if err != nil {
 		log.Error("Failed to initialize storage", slog.Any("err", err))
-		//panic(err)
+		return nil
 
 	}
 	sqlDB := db.DB

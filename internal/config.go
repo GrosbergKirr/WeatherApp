@@ -1,13 +1,14 @@
 package internal
 
 import (
-	"log/slog"
+	"log"
 	"time"
 
 	"github.com/ilyakaznacheev/cleanenv"
 )
 
 type Config struct {
+	LogLevel       string `yaml:"log_level"`
 	DatabaseConfig `yaml:"storage"`
 	HttpConfig     `yaml:"http_server_weather"`
 	SideApiUrl     `yaml:"side_api_url"`
@@ -32,13 +33,11 @@ type SideApiUrl struct {
 	ApiKey     string `yaml:"api_key" env:"API_KEY"`
 }
 
-func SetupConfig(log *slog.Logger, configPath string) *Config {
+func SetupConfig(configPath string) *Config {
 	var cfg Config
 	err := cleanenv.ReadConfig(configPath, &cfg)
 	if err != nil {
-		log.Error("Failed to setup config", slog.Any("err", err))
-		panic(err)
+		log.Fatal("Cant setup config")
 	}
-	log.Info("Config set successfully")
 	return &cfg
 }
