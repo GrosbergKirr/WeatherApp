@@ -30,8 +30,8 @@ func TestGetCities_Success(t *testing.T) {
 	mockDB, mock, _ := sqlmock.New()
 	defer mockDB.Close()
 	sqlxDB := sqlx.NewDb(mockDB, "sqlmock")
-
-	log := internal.SetupLogger()
+	cfg := internal.SetupConfig("/home/kirrgross/GolandProjects/Weather_app/config/config.yaml")
+	log, err := internal.SetupLogger(cfg)
 
 	const query = `SELECT name FROM cities LIMIT $1 OFFSET $2`
 
@@ -63,7 +63,8 @@ func TestGetCities_Error(t *testing.T) {
 	defer mockDB.Close()
 	sqlxDB := sqlx.NewDb(mockDB, "sqlmock")
 
-	log := internal.SetupLogger()
+	cfg := internal.SetupConfig("/home/kirrgross/GolandProjects/Weather_app/config/config.yaml")
+	log, err := internal.SetupLogger(cfg)
 
 	const query = `SELECT name FROM cities LIMIT $1 OFFSET $2`
 

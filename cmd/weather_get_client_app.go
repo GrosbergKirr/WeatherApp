@@ -28,7 +28,7 @@ func RanWeatherClientApp(ctx context.Context, wg *sync.WaitGroup, log *slog.Logg
 	ctxSig, _ := signal.NotifyContext(ctx, syscall.SIGTERM, syscall.SIGINT, syscall.SIGKILL)
 	wg.Add(1)
 	go func() {
-		log.Debug("Start async updating func")
+		log.Debug("Create async updating func")
 		t := time.Now()
 		for {
 			select {
