@@ -36,3 +36,8 @@ type FullForecastRequest struct {
 	City string `json:"city"`
 	Date string `json:"date"`
 }
+
+type User struct {
+	Login    string `json:"login"`
+	Password string `json:"password"`
+}

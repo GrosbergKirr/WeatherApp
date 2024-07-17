@@ -31,7 +31,7 @@ func FullPredGetter(log *slog.Logger, record DatabaseInterface) http.HandlerFunc
 			return
 		}
 		fmt.Println(req.Date)
-		log.Info("Get and decode json success")
+		log.Debug("Get and decode json success")
 
 		var forecast models.Forecast
 		forecast.CityName = req.City
@@ -39,12 +39,13 @@ func FullPredGetter(log *slog.Logger, record DatabaseInterface) http.HandlerFunc
 		date, _ := time.Parse(layout, req.Date)
 		fmt.Println(date)
 		forecast.Date = date
-		weather, err, stat := record.GetFullPred(log, forecast)
+		weather, stat, err := record.GetFullPred(log, forecast)
 		if err != nil {
 			log.Error("Failed to get full prediction", slog.Any("err", err), slog.String("path", path))
 			w.WriteHeader(stat)
 			return
 		}
+		log.Info("Get full weather forecast success")
 		render.JSON(w, r, weather)
 	}
 }

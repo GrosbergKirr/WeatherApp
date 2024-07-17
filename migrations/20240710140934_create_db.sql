@@ -22,6 +22,11 @@ CREATE TABLE IF NOT EXISTS weather ( id serial primary key,
 
 );
 CREATE INDEX IF NOT EXISTS idx_weather_date ON weather(date);
+
+CREATE TABLE IF NOT EXISTS users ( id serial primary key,
+                                     login varchar unique,
+                                     password varchar
+);
 -- +goose StatementEnd
 
 -- +goose Down

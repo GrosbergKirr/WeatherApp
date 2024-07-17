@@ -22,9 +22,11 @@ type DatabaseConfig struct {
 }
 
 type HttpConfig struct {
-	ServerAddress     string        `yaml:"server_address" env:"HTTP_SERVER_ADDRESS"`
-	ServerTimeout     time.Duration `yaml:"server_timeout" env:"HTTP_SERVER_TIMEOUT"`
-	ServerIdleTimeout time.Duration `yaml:"server_idle_timeout" env:"HTTP_SERVER_IDLE_TIMEOUT"`
+	ServerAddress       string        `yaml:"server_address" env:"HTTP_SERVER_ADDRESS"`
+	ServerTimeout       time.Duration `yaml:"server_timeout" env:"HTTP_SERVER_TIMEOUT"`
+	ServerIdleTimeout   time.Duration `yaml:"server_idle_timeout" env:"HTTP_SERVER_IDLE_TIMEOUT"`
+	TokenExpirationTime int           `yaml:"token_expiration_time,omitempty" env:"TOKEN_EXPIRATION_TIME"`
+	JWTKey              string        `yaml:"my_big_not_simple_key"`
 }
 
 type SideApiUrl struct {

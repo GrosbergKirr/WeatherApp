@@ -11,11 +11,11 @@ import (
 	"github.com/go-chi/render"
 )
 
-func GetCitiesLocation(log *slog.Logger, client http.Client, sideApiUrl string, cityName string, apiKey string) (models.City, error, int) {
+func GetCitiesLocation(log *slog.Logger, client http.Client, sideApiUrl string, cityName string, apiKey string) (models.City, int, error) {
 	u, err := url.Parse(sideApiUrl)
 	if err != nil {
 		fmt.Println("Error parsing URL:", err)
-		return models.City{}, err, http.StatusInternalServerError
+		return models.City{}, http.StatusInternalServerError, err
 	}
 	q := u.Query()
 	q.Set("q", cityName)
@@ -27,7 +27,7 @@ func GetCitiesLocation(log *slog.Logger, client http.Client, sideApiUrl string, 
 	resp, err := client.Get(urlBody)
 	if err != nil {
 		log.Error("failed to get response")
-		return models.City{}, err, resp.StatusCode
+		return models.City{}, resp.StatusCode, err
 	}
 	defer resp.Body.Close()
 
@@ -35,7 +35,7 @@ func GetCitiesLocation(log *slog.Logger, client http.Client, sideApiUrl string, 
 	err = render.DecodeJSON(resp.Body, &city)
 	if err != nil {
 		log.Error("fail to decode json")
-		return models.City{}, err, resp.StatusCode
+		return models.City{}, resp.StatusCode, err
 	}
-	return city[0], nil, resp.StatusCode
+	return city[0], resp.StatusCode, nil
 }

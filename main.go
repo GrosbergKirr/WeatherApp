@@ -22,14 +22,16 @@ import (
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 // @host localhost:9090
 
-var configPath string
-var cityList = []string{
-	"Moscow", "Paris", "Berlin", "London",
-	"Madrid", "Rome", "Washington", "Ottawa",
-	"Minsk", "Tokyo", "Canberra", "Tallinn",
-	"Warsaw", "Budapest", "Jakarta", "Prague",
-	"Lisbon", "Beijing", "Ankara", "Seoul",
-}
+var (
+	cityList = []string{
+		"Moscow", "Paris", "Berlin", "London",
+		"Madrid", "Rome", "Washington", "Ottawa",
+		"Minsk", "Tokyo", "Canberra", "Tallinn",
+		"Warsaw", "Budapest", "Jakarta", "Prague",
+		"Lisbon", "Beijing", "Ankara", "Seoul",
+	}
+	configPath string
+)
 
 func init() {
 	flag.StringVar(&configPath, "c", "./config/config.yaml", "Path to config file")

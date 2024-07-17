@@ -12,21 +12,21 @@ import (
 	"github.com/GrosbergKirr/WeatherApp/internal/models"
 )
 
-func (s *Storage) GetShortPred(log *slog.Logger, city string) (models.ShortForecastResponse, error, int) {
+func (s *Storage) GetShortPred(log *slog.Logger, city string) (models.ShortForecastResponse, int, error) {
 	const path = "/storage/get_short_forecast"
 	var country string
 	queryCity := "SELECT country FROM cities where name = $1"
 	if err := s.Db.Get(&country, queryCity, city); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			log.Error("Failed to get city from db. This city isn't in forecast list", slog.String("path", path))
-			return models.ShortForecastResponse{}, nil, http.StatusBadRequest
+			return models.ShortForecastResponse{}, http.StatusBadRequest, nil
 		}
 		log.Error("Get cities from db error", slog.String("path", path))
-		return models.ShortForecastResponse{}, err, http.StatusInternalServerError
+		return models.ShortForecastResponse{}, http.StatusInternalServerError, nil
 	}
 	if country == "" {
 		log.Error("No prediction for this city")
-		return models.ShortForecastResponse{}, nil, http.StatusBadRequest
+		return models.ShortForecastResponse{}, http.StatusBadRequest, nil
 	}
 	log.Debug("Get city, country from db success")
 
@@ -35,10 +35,10 @@ func (s *Storage) GetShortPred(log *slog.Logger, city string) (models.ShortForec
 	if err := s.Db.Select(&weatherList, queryWeather, city); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			log.Error("Failed to get forecast from db. No forecast for this city", slog.String("path", path))
-			return models.ShortForecastResponse{}, nil, http.StatusBadRequest
+			return models.ShortForecastResponse{}, http.StatusBadRequest, nil
 		}
 		log.Error("Get weather for city from db error", slog.String("path", path))
-		return models.ShortForecastResponse{}, err, http.StatusInternalServerError
+		return models.ShortForecastResponse{}, http.StatusInternalServerError, nil
 	}
 	log.Debug("Get city, country from db success")
 	var meanTemp float64
@@ -56,5 +56,5 @@ func (s *Storage) GetShortPred(log *slog.Logger, city string) (models.ShortForec
 	})
 	prediction := models.ShortForecastResponse{city, country, meanTemp, dates}
 
-	return prediction, nil, http.StatusOK
+	return prediction, http.StatusOK, nil
 }

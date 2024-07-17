@@ -7,7 +7,7 @@ import (
 )
 
 type DatabaseInterface interface {
-	GetCities(log *slog.Logger, perPage, offset int) (models.CitiesListResponse, error, int)
-	GetShortPred(log *slog.Logger, city string) (models.ShortForecastResponse, error, int)
-	GetFullPred(log *slog.Logger, param models.Forecast) (models.Record, error, int)
+	GetCities(log *slog.Logger, perPage, offset int) (models.CitiesListResponse, int, error)
+	GetShortPred(log *slog.Logger, city string) (models.ShortForecastResponse, int, error)
+	GetFullPred(log *slog.Logger, param models.Forecast) (models.Record, int, error)
 }

@@ -63,7 +63,6 @@ func GetWeather(log *slog.Logger,
 			*weatherList = append(*weatherList, weather)
 			mu.Unlock()
 		}
-
 	}
 	return resp.StatusCode, err
 }

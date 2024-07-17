@@ -9,6 +9,8 @@ http_server:
   server_address: "localhost:9090"
   server_timeout: 4s
   server_idle_timeout: 60s
+  token_expiration_time_minutes: 5
+  jwt_key: "my_big_not_simple_key"
 side_api_url:
   get_cities_url: "cities_url"
   get_weather_url: "weather_url"

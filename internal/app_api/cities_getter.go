@@ -37,7 +37,7 @@ func CitiesGetter(log *slog.Logger, cities DatabaseInterface) http.HandlerFunc {
 			return
 		}
 		offset := (pageInt - 1) * perPageInt
-		citiesList, err, stat := cities.GetCities(log, perPageInt, offset)
+		citiesList, stat, err := cities.GetCities(log, perPageInt, offset)
 		if err != nil {
 			log.Error("Failed to get cities", slog.Any("err", err), slog.String("path", path))
 			w.WriteHeader(stat)

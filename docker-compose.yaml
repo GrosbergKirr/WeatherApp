@@ -24,5 +24,5 @@ services:
       POSTGRES_PASSWORD: grosBerg22
       PGDATA: /var/lib/postgresql/data/pgdata
       POSTGRES_HOST_AUTH_METHOD: md5
-      POSTGRES_INITDB_ARGS: --auth=md5
+      POSTGRES_INITDB_ARGS: --service_auth=md5
     container_name: weather_db

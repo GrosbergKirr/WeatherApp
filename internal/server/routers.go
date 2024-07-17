@@ -3,18 +3,26 @@ package server
 import (
 	"log/slog"
 
+	"github.com/GrosbergKirr/WeatherApp/internal"
 	"github.com/GrosbergKirr/WeatherApp/internal/app_api"
 	"github.com/GrosbergKirr/WeatherApp/internal/storage"
+	"github.com/GrosbergKirr/WeatherApp/service_auth"
 	"github.com/go-chi/chi/v5"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
-func SetRouters(log *slog.Logger, db *storage.Storage) chi.Router {
+func SetRouters(log *slog.Logger, cfg *internal.Config, db *storage.Storage) chi.Router {
 	router := chi.NewRouter()
 	router.Get("/get_cities", app_api.CitiesGetter(log, db))
 	router.Get("/get_short_forecast", app_api.ShortPredGetter(log, db))
 	router.Post("/get_full_forecast", app_api.FullPredGetter(log, db))
 
+	router.Post("/register", service_auth.RegisterUser(log, db))
+	router.Post("/login", service_auth.LogInUser(log, cfg, db))
+	router.Route("", func(r chi.Router) {
+		router.Use(service_auth.TokenAuthMiddleware(log, cfg))
+		//	Ручки с авторизацией
+	})
 	router.Get("/swagger/*", httpSwagger.Handler(
 		httpSwagger.URL("http://localhost:9090/swagger/doc.json"), //The url pointing to API definition
 	))
