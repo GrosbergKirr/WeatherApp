@@ -45,7 +45,7 @@ func TestGetCities_Success(t *testing.T) {
 
 	storage := Storage{Db: sqlxDB}
 
-	rows, err, status := storage.GetCities(log, perPage, offset)
+	rows, status, err := storage.GetCities(log, perPage, offset)
 
 	require.NoError(t, err)
 	require.NotNil(t, rows)
@@ -74,7 +74,7 @@ func TestGetCities_Error(t *testing.T) {
 
 	storage := Storage{Db: sqlxDB}
 
-	rows, err, status := storage.GetCities(log, perPage, offset)
+	rows, status, err := storage.GetCities(log, perPage, offset)
 
 	require.Error(t, err)
 	require.Nil(t, rows.Cities)
